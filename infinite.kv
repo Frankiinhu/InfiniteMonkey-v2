@@ -1,0 +1,134 @@
+<ScreenManager>:
+    Menu:
+    Gerador:
+    Calculadora:
+    CanvasScreen:
+    Help:
+
+<Menu>:
+    name: "menu"
+    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(10)
+
+        MDLabel:
+            text: "Teorema do Macaco Infinito"
+            font_size: "30sp"
+            halign: "center"
+            pos_hint: {"center_x": 0.5}
+
+        
+        MDRaisedButton:
+            text: "Gerador Infinito"
+            on_release: app.root.current = "gerador"
+            pos_hint: {"center_x": 0.5}
+
+        MDRaisedButton:
+            text: "Calculadora"
+            on_release: app.root.current = "calculadora"
+            pos_hint: {"center_x": 0.5}
+
+        MDRaisedButton:
+            text: "Canvas Infinito"
+            on_release: app.root.current = "canvas"
+            pos_hint: {"center_x": 0.5}    
+
+        MDRaisedButton:
+            text: "?"
+            on_release: app.root.current = "help"
+            pos_hint: {"center_x": 0.95}        
+
+<Gerador>:
+    name: "gerador"
+    
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(10)
+        padding: dp(20)
+
+        MDLabel:
+            id: texto_gerado
+            text: "Clique no botão para gerar o seu texto aleatório."
+            halign: "center"
+
+        MDIconButton:
+            icon: "play"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.gerar_texto() 
+
+        MDIconButton:
+            icon: "magnify"
+
+        MDRaisedButton:
+            text: "Voltar ao Menu"          
+            on_release: app.root.current = "menu"
+
+<Calculadora>:
+    name: "calculadora"
+    
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(10)
+        padding: dp(20)
+
+        MDLabel:
+            text: "Quanto tempo um texto demoraria para ser escrito apenas digitando letras aleatórias?"
+            halign: "center"
+
+        MDTextField:
+            id: usuario_texto
+            hint_text: "Digite seu texto e descubra"
+            size_hint_x: 0.8
+            pos_hint: {"center_x": 0.5}
+
+        MDLabel:
+            id: resultado
+            text: ""
+            halign: "center"
+
+        MDIconButton:
+            icon: "calculator"
+            pos_hint: {"center_x": 0.5}
+            on_release: root.calcular_tempo_maximo(usuario_texto.text)
+
+        MDRaisedButton:
+            text: "Voltar ao Menu"
+            on_release: app.root.current = "menu"
+            pos_hint: {"center_x": 0.5}
+
+<CanvasScreen>:
+    name: "canvas"
+    
+    BoxLayout:
+        CanvasImage:
+            id: canvas_image
+            dynamic_color_quality: 10
+
+        MDRaisedButton:
+            #style: "outlined"
+            text: "Voltar ao Menu"
+            on_release: app.root.current = "menu"
+        
+        MDIconButton:
+            icon: "autorenew"
+            valign: "top"
+            on_release: canvas_image.gerar_textura()
+
+<Help>:
+    name: "help"
+
+    BoxLayout:
+        orientation: "vertical"
+        spacing: dp(10)
+        padding: dp(20)
+
+        MDLabel:
+            text: "Ajuda"
+            halign: "center"
+
+        MDRaisedButton:
+            text: "Voltar ao Menu"
+            on_release: app.root.current = "menu"
+            pos_hint: {"center_x": 0.5}               
