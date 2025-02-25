@@ -7,7 +7,7 @@
 
 <Menu>:
     name: "menu"
-    
+
     BoxLayout:
         orientation: 'vertical'
         padding: dp(20)
@@ -15,7 +15,8 @@
 
         MDLabel:
             text: "Teorema do Macaco Infinito"
-            font_size: "30sp"
+            font_size: "40sp"
+            markup: True
             halign: "center"
             pos_hint: {"center_x": 0.5}
 
@@ -26,7 +27,7 @@
             pos_hint: {"center_x": 0.5}
 
         MDRaisedButton:
-            text: "Calculadora"
+            text: "Calculadora de Tempo"
             on_release: app.root.current = "calculadora"
             pos_hint: {"center_x": 0.5}
 
@@ -48,22 +49,56 @@
         spacing: dp(10)
         padding: dp(20)
 
-        MDLabel:
-            id: texto_gerado
-            text: "Clique no botão para gerar o seu texto aleatório."
-            halign: "center"
+        MDScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            BoxLayout:
+                size_hint_y: None
+                height: self.minimum_height
+                MDLabel:
+                    id: label_gerado
+                    text: "Clique no botão para gerar o seu texto aleatório."   
+                    markup: True
+                    halign: "center"
+                    valign: "center"
+                    size_hint_y: None
+                    height: self.texture_size[1]
 
         MDIconButton:
+            id: playbutton
             icon: "play"
             pos_hint: {"center_x": 0.5}
-            on_release: root.gerar_texto() 
+            on_release:
+                root.gerar_texto()
+                self.icon = "autorenew"
+                search_field.text, search_field.helper_text = "", ""
+
+        MDTextField:
+            id: search_field
+            hint_text: "Encontrar na Página..."
+            helper_text: ""
+            helper_text_mode: "persistent"
+            size_hint_x: None
+            width: 0
+            opacity: 0
+            mode: "fill"
+
+            on_focus:
+                self.opacity = 1 if self.focus else 0
+                self.width = dp(300) if self.focus else 0
+                
+            on_text: root.ctrl_F(self.text)
 
         MDIconButton:
             icon: "magnify"
+            pos_hint: {"center_y": 1}
+            valign: "bottom"
+            on_release: search_field.focus = True
 
-        MDRaisedButton:
-            text: "Voltar ao Menu"          
+        MDIconButton:
+            icon: "arrow-left"    
             on_release: app.root.current = "menu"
+
 
 <Calculadora>:
     name: "calculadora"
@@ -80,8 +115,11 @@
         MDTextField:
             id: usuario_texto
             hint_text: "Digite seu texto e descubra"
+            helper_text: "Apenas letras minúsculas e espaços serão considerados no cálculo."
+            helper_text_mode: "persistent"
             size_hint_x: 0.8
             pos_hint: {"center_x": 0.5}
+            on_text_validate: root.calcular_tempo_maximo(self.text)
 
         MDLabel:
             id: resultado
@@ -93,10 +131,9 @@
             pos_hint: {"center_x": 0.5}
             on_release: root.calcular_tempo_maximo(usuario_texto.text)
 
-        MDRaisedButton:
-            text: "Voltar ao Menu"
+        MDIconButton:
+            icon: "arrow-left"
             on_release: app.root.current = "menu"
-            pos_hint: {"center_x": 0.5}
 
 <CanvasScreen>:
     name: "canvas"
@@ -104,31 +141,93 @@
     BoxLayout:
         CanvasImage:
             id: canvas_image
-            dynamic_color_quality: 10
 
-        MDRaisedButton:
-            #style: "outlined"
-            text: "Voltar ao Menu"
-            on_release: app.root.current = "menu"
-        
+    BoxLayout:
+        orientation:"vertical"
+        spacing: dp(10)
+        padding: dp(20)
+
         MDIconButton:
             icon: "autorenew"
-            valign: "top"
             on_release: canvas_image.gerar_textura()
+        MDIconButton:
+            icon: "arrow-left"
+            on_release: app.root.current = "menu"      
 
 <Help>:
     name: "help"
 
+    MDScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        
+        BoxLayout:
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(55)
+            size_hint_y: None
+            height: self.minimum_height
+            MDLabel:
+                text: "Sobre o projeto"
+                valign: "top"
+                halign: "center"
+                font_style: "H5"
+                height: self.texture_size[1]
+                widght: self.texture_size [1]
+                size_hint_y: None
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: dp(20)
+                spacing: dp(40)
+                MDLabel:
+                    text: root.intro 
+                    halign: "left"
+                    pos_hint: {"center_y": (0.6)}
+                    height: self.texture_size[1]
+                    size_hint_y: None
+
+                Image:
+                    source: "help/writing_machine.png"
+                    #pos_hint: {"center_x": (0.7)}
+                    height: self.texture_size[1]/2.75
+                    size_hint_y: None
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: dp(20)
+                spacing: dp(40)
+                MDLabel:
+                    text: root.corpo 
+                    halign: "left"
+                    height: self.texture_size[1]
+                    size_hint_y: None
+
+            BoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: dp(20)
+                spacing: dp(40)
+                MDLabel:
+                    text: root.concl 
+                    halign: "left"
+                    valign: "top"
+                    height: self.texture_size[1]
+                    size_hint_y: None
+                    pos_hint: {"center_y": (0.7)}
+                Image:
+                    source: "help/canvas_gerado.png"
+                    height: self.texture_size[1]/2
+                    size_hint_y: None
+            
+
     BoxLayout:
         orientation: "vertical"
-        spacing: dp(10)
-        padding: dp(20)
-
-        MDLabel:
-            text: "Ajuda"
-            halign: "center"
-
-        MDRaisedButton:
-            text: "Voltar ao Menu"
+        MDIconButton:
+            icon: "arrow-left"
             on_release: app.root.current = "menu"
-            pos_hint: {"center_x": 0.5}               
